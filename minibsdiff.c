@@ -68,11 +68,11 @@ barf(const char* msg)
 static void
 usage(void)
 {
-  printf("usage:\n\n"
+  printf("usage:\n"
          "Generate patch:"
-         "\t$ %s gen <v1> <v2> <patch>\n"
+         "\t %s gen <v1> <v2> <patch>\n"
          "Apply patch:"
-         "\t$ %s app <v1> <patch> <v2>\n", progname, progname);
+         "\t %s app <v1> <patch> <v2>\n", progname, progname);
   exit(EXIT_FAILURE);
 }
 
