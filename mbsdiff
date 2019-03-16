@@ -1,0 +1,49 @@
+#! /bin/bash
+
+# minibsdiff
+# Create patch: ./minibsdiff gen <v1> <v2> <patch>
+# Apply patch:  ./minibsdiff app <v1> <patch> <v2>
+
+# mbsdiff
+# Create patch: ./mbsdiff <old> <new> <patch>
+# Apply patch:  ./mbsdiff <patch> <old> <new>
+if echo $3 | grep mbsd; then
+    patch=$3
+    old=$1
+    new=$2
+    act=gen
+elif echo $1 | grep mbsd; then
+    patch=$1
+    old=$2
+    new=$3
+    act=app
+else
+printf "usage:
+	mbsdiff <old> <new> <patch>	# Create patch
+	mbsdiff <patch> <old> <new>	# Apply patch
+"
+exit 0
+fi
+
+ptmp=${patch##*/}
+ptmp=${ptmp%.xz}
+ptmp=/tmp/${ptmp%.mbsd}.mbsd
+
+
+if [[ "$act" == "gen" ]]; then
+    if minibsdiff gen $old $new $ptmp; then
+        xz -cve9 $ptmp > $patch 2> >(sed -e 's/.*://' >/dev/tty)
+        rm -f $ptmp
+    fi
+elif [[ "$act" == "app" ]]; then
+    if xz -dc $patch >$ptmp; then
+        if minibsdiff app $old $ptmp $new; then
+            rm -f $ptmp
+        fi
+    fi
+else
+    ./minibsdiff | sed -e 's/minibsdiff/mbsdiff/'
+fi
+
+exit $?
+
