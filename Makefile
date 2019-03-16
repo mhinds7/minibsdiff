@@ -2,6 +2,7 @@
 
 CC?=cc
 OPTIMIZATION?=-O3 -march=native -fomit-frame-pointer -funroll-loops
+DEBUG?=
 
 STD  = -std=c99 -pedantic
 WARN = -Wall -Wextra
@@ -19,7 +20,7 @@ INSTALL=install
 USING_COMPCERT=$(shell sh -c '(($(CC) --help | grep CompCert) > /dev/null && echo YES) || echo NO')
 
 ifdef DEBUG
-DEBUGOPT=-g -gdb
+DEBUGOPT=-ggdb
 
 ifdef ASAN
 DEBUGOPT+=-fsanitize=address
@@ -27,6 +28,8 @@ endif
 ifdef UBSAN
 DEBUGOPT+=-fsanitize=undefined
 endif
+else
+DEBUGOPT=-DNDEBUG
 endif
 
 ifeq ($(USING_COMPCERT),YES)
