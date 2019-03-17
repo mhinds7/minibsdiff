@@ -30,7 +30,6 @@ ifdef UBSAN
 DEBUGOPT+=-fsanitize=undefined
 endif
 else
-INSTALL_STRIP=-s
 DEBUGOPT=-DNDEBUG
 endif
 
@@ -132,11 +131,11 @@ $(INSTALL_LIB)/libminibsdiff.a: libminibsdiff.a
 
 $(INSTALL_LIB)/libminibsdiff.so: libminibsdiff.so
 	$(Q)mkdir -p $(INSTALL_LIB)
-	$(QINSTALL) $(INSTALL_STRIP) $< $(INSTALL_LIB)
+	$(QINSTALL) $< $(INSTALL_LIB)
 
 $(INSTALL_BIN)/minibsdiff: minibsdiff
 	$(Q)mkdir -p $(INSTALL_BIN)
-	$(QINSTALL) $(INSTALL_STRIP) $< $(INSTALL_BIN)
+	$(QINSTALL) $< $(INSTALL_BIN)
 
 $(INSTALL_BIN)/mbsdiff: mbsdiff
 	$(Q)mkdir -p $(INSTALL_BIN)
