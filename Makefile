@@ -3,6 +3,7 @@
 CC?=cc
 OPTIMIZATION?=-O3 -march=native -fomit-frame-pointer -funroll-loops
 DEBUG?=
+NOLIBS?=1
 
 STD  = -std=c99 -pedantic
 WARN = -Wall -Wextra
@@ -29,6 +30,7 @@ ifdef UBSAN
 DEBUGOPT+=-fsanitize=undefined
 endif
 else
+INSTALL_STRIP=-s
 DEBUGOPT=-DNDEBUG
 endif
 
@@ -105,10 +107,16 @@ libminibsdiff.a: bsdiff.o bspatch.o
 
 # -- Install rules -------------------------------------------------------------
 
+ifndef NOLIBS
 install: 	$(INSTALL_LIB)/libminibsdiff.a \
 	 	$(INSTALL_LIB)/libminibsdiff.so \
 		$(INSTALL_INCLUDE)/bsdiff.h $(INSTALL_INCLUDE)/bspatch.h \
-		$(INSTALL_BIN)/minibsdiff
+		$(INSTALL_BIN)/minibsdiff \
+		$(INSTALL_BIN)/mbsdiff
+else
+install:	$(INSTALL_BIN)/minibsdiff \
+		$(INSTALL_BIN)/mbsdiff
+endif
 
 $(INSTALL_INCLUDE)/bsdiff.h: bsdiff.h
 	$(Q)mkdir -p $(INSTALL_INCLUDE)
@@ -124,9 +132,13 @@ $(INSTALL_LIB)/libminibsdiff.a: libminibsdiff.a
 
 $(INSTALL_LIB)/libminibsdiff.so: libminibsdiff.so
 	$(Q)mkdir -p $(INSTALL_LIB)
-	$(QINSTALL) $< $(INSTALL_LIB)
+	$(QINSTALL) $(INSTALL_STRIP) $< $(INSTALL_LIB)
 
 $(INSTALL_BIN)/minibsdiff: minibsdiff
+	$(Q)mkdir -p $(INSTALL_BIN)
+	$(QINSTALL) $(INSTALL_STRIP) $< $(INSTALL_BIN)
+
+$(INSTALL_BIN)/mbsdiff: mbsdiff
 	$(Q)mkdir -p $(INSTALL_BIN)
 	$(QINSTALL) $< $(INSTALL_BIN)
 
