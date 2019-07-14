@@ -116,7 +116,7 @@ diff(const char* oldf, const char* newf, const char* patchf)
 {
   u_char* old;
   u_char* new;
-  u_char* patch;
+  u_char* patchb;
   long oldsz, newsz;
   off_t patchsz;
   int res;
@@ -130,7 +130,7 @@ diff(const char* oldf, const char* newf, const char* patchf)
   newsz = read_file(newf, &new);
 
 #ifndef NDEBUG
-  printf("Old file = %lu bytes\nNew file = %lu bytes\n", oldsz, newsz);
+  printf("Old file = %ld bytes\nNew file = %ld bytes\n", oldsz, newsz);
 #endif /* NDEBUG */
 
   /* Compute delta */
@@ -139,8 +139,8 @@ diff(const char* oldf, const char* newf, const char* patchf)
 #endif /* NDEBUG */
 
   patchsz = bsdiff_patchsize_max(oldsz, newsz);
-  patch = malloc(patchsz+1); /* Never malloc(0) */
-  res = bsdiff(old, oldsz, new, newsz, patch, patchsz);
+  patchb = malloc(patchsz+1); /* Never malloc(0) */
+  res = bsdiff(old, oldsz, new, newsz, patchb, patchsz);
   if (res <= 0) barf("bsdiff() failed!");
   patchsz = res;
 
@@ -149,11 +149,11 @@ diff(const char* oldf, const char* newf, const char* patchf)
 #endif /* NDEBUG */
 
   /* Write patch */
-  write_file(patchf, patch, patchsz);
+  write_file(patchf, patchb, patchsz);
 
   free(old);
   free(new);
-  free(patch);
+  free(patchb);
 
 #ifndef NDEBUG
   printf("Created patch file %s\n", patchf);
@@ -179,7 +179,7 @@ patch(const char* inf, const char* patchf, const char* outf)
   insz    = read_file(inf, &inp);
   patchsz = read_file(patchf, &patchp);
 #ifndef NDEBUG
-  printf("Old file = %lu bytes\nPatch file = %lu bytes\n", insz, patchsz);
+  printf("Old file = %ld bytes\nPatch file = %ld bytes\n", insz, patchsz);
 #endif /* NDEBUG */
 
   /* Apply delta */
