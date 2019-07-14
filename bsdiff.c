@@ -243,6 +243,7 @@ int bsdiff(u_char* oldp, off_t oldsize,
   if(((I=malloc((oldsize+1)*sizeof(off_t)))==NULL) ||
      ((V=malloc((oldsize+1)*sizeof(off_t)))==NULL)) {
       if (I) free(I);
+      if (V) free(V);
       return -1;
   }
 
@@ -255,6 +256,7 @@ int bsdiff(u_char* oldp, off_t oldsize,
   if(((db=malloc(newsize+1))==NULL) ||
      ((eb=malloc(newsize+1))==NULL)) {
     if (db) free(db);
+    if (eb) free(eb);
     free(I);
     return -1;
   }
