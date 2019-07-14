@@ -64,7 +64,7 @@ off_t bsdiff_patchsize_max(off_t oldsize, off_t newsize);
  * respective sizes,) and store the result in the buffer pointed to by 'patch'.
  *
  * The input pointer 'patch' must not be NULL, and the size of the buffer must
- * be at least 'bsdiff_patchsize_max(new,old)' in length.
+ * be at least 'bsdiff_patchsize_max(old, new)' in length.
  *
  * Returns -1 if `patch` is NULL, the 'patch' buffer is not large enough, or if
  * memory cannot be allocated.

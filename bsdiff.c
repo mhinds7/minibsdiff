@@ -209,9 +209,9 @@ offtout(off_t x,u_char *buf)
 }
 
 off_t
-bsdiff_patchsize_max(off_t newsize, off_t oldsize)
+bsdiff_patchsize_max(off_t oldsize, off_t newsize)
 {
-  return newsize+oldsize+BSDIFF_PATCH_SLOP_SIZE;
+  return oldsize+newsize+BSDIFF_PATCH_SLOP_SIZE;
 }
 
 int bsdiff(u_char* oldp, off_t oldsize,
