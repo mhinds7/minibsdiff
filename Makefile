@@ -30,8 +30,8 @@ ifdef UBSAN
 DEBUGOPT+=-fsanitize=undefined
 endif
 else
-INSTALL_STRIP=-s
 DEBUGOPT=-DNDEBUG
+BUILD_STRIP=-s
 endif
 
 ifeq ($(USING_COMPCERT),YES)
@@ -92,10 +92,10 @@ clean:
 # -- Build rules ---------------------------------------------------------------
 
 minibsdiff: minibsdiff.c
-	$(QCC) $(MY_CFLAGS) -o $@ $<
+	$(QCC) $(MY_CFLAGS) $(BUILD_STRIP) -o $@ $<
 
 libminibsdiff.so: bsdiff.dyn_o bspatch.dyn_o
-	$(QLINK) -shared -o $@ bsdiff.dyn_o bspatch.dyn_o
+	$(QLINK) -shared $(BUILD_STRIP) -o $@ bsdiff.dyn_o bspatch.dyn_o
 libminibsdiff.a: bsdiff.o bspatch.o
 	$(QAR) -rc $@ bsdiff.o bspatch.o
 	$(QRANLIB) $@
@@ -132,11 +132,11 @@ $(INSTALL_LIB)/libminibsdiff.a: libminibsdiff.a
 
 $(INSTALL_LIB)/libminibsdiff.so: libminibsdiff.so
 	$(Q)mkdir -p $(INSTALL_LIB)
-	$(QINSTALL) $(INSTALL_STRIP) $< $(INSTALL_LIB)
+	$(QINSTALL) $< $(INSTALL_LIB)
 
 $(INSTALL_BIN)/minibsdiff: minibsdiff
 	$(Q)mkdir -p $(INSTALL_BIN)
-	$(QINSTALL) $(INSTALL_STRIP) $< $(INSTALL_BIN)
+	$(QINSTALL) $< $(INSTALL_BIN)
 
 $(INSTALL_BIN)/mbsdiff: mbsdiff
 	$(Q)mkdir -p $(INSTALL_BIN)
